@@ -1,14 +1,13 @@
-from typing import Type, TypeVar, Generic, List, Optional
+from typing import Type, Generic, List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
 from sqlalchemy import delete, update
-from sqlalchemy.orm import DeclarativeBase
+
 
 from app.exceptions import DBInsertError
 from app.exceptions.messages import GENERIC_ERROR_MESSAGE
-
-ModelType = TypeVar("ModelType", bound=DeclarativeBase)
+from . import ModelType
 
 
 class Repository(Generic[ModelType]):

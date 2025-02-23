@@ -3,6 +3,7 @@ import string
 from fastapi import APIRouter, status, Path, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import datetime
 
 from logger import CustomLogger
 from app.database.session import get_db_session
@@ -73,11 +74,17 @@ async def create_url_mapping(
         },
     },
 )
-async def redirect_mapped_url(url: str = Path()):
-    # for s_url in temp_db:
-    #     if s_url.get("short_url", "") == url:
-    #         s_url["visited"] += 1
-    #         return RedirectResponse(s_url.get("mapped_url"))
-    #     else:
-    #         raise HTTPException(status.HTTP_404_NOT_FOUND, "No mapped URL found")
-    pass
+async def redirect_mapped_url(
+    url: str = Path(),
+    repository: URLRepository[URLORM] = Depends(get_url_repository),
+):
+    try:
+        mapped_url = await repository.get_mapped_url(url, "short_url")
+        if mapped_url:
+            mapped_url.visited += 1
+            mapped_url.last_visit = datetime.now().date()
+            await repository.update_model(mapped_url.id, mapped_url)
+            return RedirectResponse(mapped_url.mapped_url)
+    except DBInsertError as insert_error:
+        LOGGER.exception(insert_error)
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, insert_error.message)

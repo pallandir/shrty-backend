@@ -34,14 +34,19 @@ class Repository(Generic[ModelType]):
         )
         return result.scalars().first()
 
-    async def update(self, obj_id: int, obj: ModelType) -> Optional[ModelType]:
+    async def update_model(self, obj_id: int, obj: ModelType) -> Optional[ModelType]:
+        changed_attributes = {
+            key: value
+            for key, value in obj.__dict__.items()
+            if key != "_sa_instance_state"
+        }
         await self.session.execute(
-            update(self.model).where(self.model.id == obj_id).values(obj)
+            update(self.model).where(self.model.id == obj_id).values(changed_attributes)
         )
         await self.session.commit()
         return await self.get_by_id(obj_id)
 
-    async def delete(self, obj_id: int) -> bool:
+    async def delete_model(self, obj_id: int) -> bool:
         result = await self.session.execute(
             delete(self.model).where(self.model.id == obj_id)
         )

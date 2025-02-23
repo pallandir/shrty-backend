@@ -8,6 +8,10 @@ DEBUG: bool = True
 
 SERVER_HOST: str = config("HOST", default="0.0.0.0", cast=str)  # type: ignore
 SERVER_PORT: int = config("PORT", default=8090, cast=int)  # type: ignore
+ENVIRONMENT: str = config("ENVIRONMENT", default="dev")
+APPLICATION_URL: str = (
+    f"{'https' if ENVIRONMENT == 'prd' else 'http'}://{SERVER_HOST}:{SERVER_PORT}"
+)
 SERVER_WORKERS: int = config("SERVER_WORKERS", default=1, cast=int)  # type: ignore
 API_PREFIX: str = "/api/v1"
 DOCS_URL: str = f"{API_PREFIX}/docs"

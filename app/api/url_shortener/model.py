@@ -3,7 +3,7 @@ from datetime import date
 from app.database import Base
 
 
-class URL(Base):
+class URLORM(Base):
     __tablename__ = "urls"
 
     id: Mapped[int] = mapped_column(primary_key=True)

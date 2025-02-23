@@ -1,15 +1,24 @@
 import random
 import string
-from fastapi import APIRouter, status, Path, HTTPException
+from fastapi import APIRouter, status, Path, HTTPException, Depends
 from fastapi.responses import RedirectResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from logger import CustomLogger
+from app.database.session import get_db_session
+from app.database.repository import Repository
+from app.exceptions import DBInsertError
 from .schema import URL, URLResponse
 from .service import filtered_emojis
+from .model import URLORM
 
 router = APIRouter(tags=["url shortener"])
 LOGGER = CustomLogger(module_name=__name__).get_logger()
 URL_LENGTH = 4
+
+
+async def get_url_repository(session: AsyncSession = Depends(get_db_session)):
+    return Repository(session=session, model=URLORM)
 
 
 @router.post(
@@ -24,13 +33,23 @@ URL_LENGTH = 4
         },
     },
 )
-def create_url_mapping(url: URL):
+async def create_url_mapping(
+    url: URL,
+    repository: Repository[URLORM] = Depends(get_url_repository),
+):
     available_chars = (
         f"{string.ascii_uppercase}:{string.digits}{''.join(filtered_emojis())}"
     )
     shortened_url = "".join(random.choices(available_chars, k=URL_LENGTH))
+    response = URLResponse(short_url=shortened_url, mapped_url=url.url).model_dump(
+        mode="json"
+    )
+    try:
+        await repository.create(URLORM(**response))
+    except DBInsertError as insert_error:
+        LOGGER.exception(insert_error)
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, insert_error.message)
 
-    response = URLResponse(short_url=shortened_url, mapped_url=url.url)
     return response
 
 
@@ -48,10 +67,11 @@ def create_url_mapping(url: URL):
         },
     },
 )
-def redirect_mapped_url(url: str = Path()):
-    for s_url in temp_db:
-        if s_url.get("short_url", "") == url:
-            s_url["visited"] += 1
-            return RedirectResponse(s_url.get("mapped_url"))
-        else:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, "No mapped URL found")
+async def redirect_mapped_url(url: str = Path()):
+    # for s_url in temp_db:
+    #     if s_url.get("short_url", "") == url:
+    #         s_url["visited"] += 1
+    #         return RedirectResponse(s_url.get("mapped_url"))
+    #     else:
+    #         raise HTTPException(status.HTTP_404_NOT_FOUND, "No mapped URL found")
+    pass

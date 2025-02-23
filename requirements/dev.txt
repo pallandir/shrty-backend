@@ -4,3 +4,5 @@ uvicorn==0.34.0
 alembic==1.14.1
 psycopg==3.2.5
 SQLAlchemy==2.0.38
+orjson==3.10.15
+emoji==2.14.1

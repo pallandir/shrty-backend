@@ -1,6 +1,57 @@
-from fastapi import APIRouter
+import random
+import string
+from fastapi import APIRouter, status, Path, HTTPException
+from fastapi.responses import RedirectResponse
 
 from logger import CustomLogger
+from .schema import URL, URLResponse
+from .service import filtered_emojis
 
-router = APIRouter(prefix="/", tags=["url shortener"])
+router = APIRouter(tags=["url shortener"])
 LOGGER = CustomLogger(module_name=__name__).get_logger()
+URL_LENGTH = 4
+
+
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    description="Create a new shortened URL",
+    summary="Create a new shortened URL from a Http URL. An optional parameter can be sent to suggest your own shortened URL",
+    responses={
+        status.HTTP_200_OK: {
+            "model": URLResponse,
+            "description": "Shortened URL",
+        },
+    },
+)
+def create_url_mapping(url: URL):
+    available_chars = (
+        f"{string.ascii_uppercase}:{string.digits}{''.join(filtered_emojis())}"
+    )
+    shortened_url = "".join(random.choices(available_chars, k=URL_LENGTH))
+
+    response = URLResponse(short_url=shortened_url, mapped_url=url.url)
+    return response
+
+
+@router.get(
+    "/{url}",
+    status_code=status.HTTP_200_OK,
+    description="Redirect a shortened URL to a mapped URL",
+    summary="Redirect a shortened URL to a mapped URL",
+    responses={
+        status.HTTP_301_MOVED_PERMANENTLY: {
+            "description": "Redirected",
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "No mapped URL found",
+        },
+    },
+)
+def redirect_mapped_url(url: str = Path()):
+    for s_url in temp_db:
+        if s_url.get("short_url", "") == url:
+            s_url["visited"] += 1
+            return RedirectResponse(s_url.get("mapped_url"))
+        else:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, "No mapped URL found")

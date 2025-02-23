@@ -51,7 +51,7 @@ app.add_middleware(
 
 
 for route in routers_list:
-    app.include_router(route, prefix=API_PREFIX)
+    app.include_router(route)
 
 
 # Health Check

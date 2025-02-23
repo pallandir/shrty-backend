@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from logger import CustomLogger
 from app.database.session import get_db_session
-from app.database.repositories.base import Repository
+from app.database.repositories.url_shortener import URLRepository
 from app.exceptions import DBInsertError
 from .schema import URL, URLResponse
 from .service import filtered_emojis
@@ -18,7 +18,7 @@ URL_LENGTH = 4
 
 
 async def get_url_repository(session: AsyncSession = Depends(get_db_session)):
-    return Repository(session=session, model=URLORM)
+    return URLRepository(session=session, model=URLORM)
 
 
 @router.post(
@@ -35,26 +35,28 @@ async def get_url_repository(session: AsyncSession = Depends(get_db_session)):
 )
 async def create_url_mapping(
     url: URL,
-    repository: Repository[URLORM] = Depends(get_url_repository),
+    repository: URLRepository[URLORM] = Depends(get_url_repository),
 ):
     available_chars = (
         f"{string.ascii_uppercase}:{string.digits}{''.join(filtered_emojis())}"
     )
     shortened_url = "".join(random.choices(available_chars, k=URL_LENGTH))
-    response = URLResponse(short_url=shortened_url, mapped_url=url.url).model_dump(
-        mode="json"
-    )
+    shortened_url_model = URLResponse(
+        short_url=shortened_url, mapped_url=url.url
+    ).model_dump(mode="json")
     try:
-        check_url = await repository.get_by_id(
-            response.get("mapped_url", ""), "mapped_url"
+        check_mapped_url = await repository.get_mapped_url(
+            shortened_url_model.get("mapped_url", "")
         )
-        print(check_url)
-        # await repository.create(URLORM(**response))
+        if check_mapped_url:
+            shortened_url_model = check_mapped_url.__dict__
+        else:
+            await repository.create(URLORM(**shortened_url_model))
     except DBInsertError as insert_error:
         LOGGER.exception(insert_error)
         raise HTTPException(status.HTTP_400_BAD_REQUEST, insert_error.message)
 
-    return response
+    return shortened_url_model
 
 
 @router.get(

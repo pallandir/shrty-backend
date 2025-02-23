@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from logger import CustomLogger
 from app.database.session import get_db_session
-from app.database.repository import Repository
+from app.database.repositories.base import Repository
 from app.exceptions import DBInsertError
 from .schema import URL, URLResponse
 from .service import filtered_emojis
@@ -45,7 +45,11 @@ async def create_url_mapping(
         mode="json"
     )
     try:
-        await repository.create(URLORM(**response))
+        check_url = await repository.get_by_id(
+            response.get("mapped_url", ""), "mapped_url"
+        )
+        print(check_url)
+        # await repository.create(URLORM(**response))
     except DBInsertError as insert_error:
         LOGGER.exception(insert_error)
         raise HTTPException(status.HTTP_400_BAD_REQUEST, insert_error.message)

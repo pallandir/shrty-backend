@@ -3,3 +3,4 @@ python-decouple==3.8
 uvicorn==0.34.0
 alembic==1.14.1
 psycopg==3.2.5
+SQLAlchemy==2.0.38

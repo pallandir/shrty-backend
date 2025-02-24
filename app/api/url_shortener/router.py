@@ -90,3 +90,23 @@ async def redirect_mapped_url(
     return RedirectResponse(
         mapped_url.mapped_url, status_code=status.HTTP_301_MOVED_PERMANENTLY
     )
+
+
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    description="Get all URLs",
+    summary="Get all URLs",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Redirected",
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "No URL found",
+        },
+    },
+)
+async def get_all_urls(
+    repository: URLRepository[URLORM] = Depends(get_url_repository),
+):
+    return [link.__dict__ for link in await repository.get_all()]

@@ -28,7 +28,7 @@ async def get_url_repository(session: AsyncSession = Depends(get_db_session)):
     description="Create a new shortened URL",
     summary="Create a new shortened URL from a Http URL. An optional parameter can be sent to suggest your own shortened URL",
     responses={
-        status.HTTP_200_OK: {
+        status.HTTP_201_CREATED: {
             "model": URLResponse,
             "description": "Shortened URL",
         },
@@ -62,7 +62,7 @@ async def create_url_mapping(
 
 @router.get(
     "/{url}",
-    status_code=status.HTTP_200_OK,
+    status_code=status.HTTP_301_MOVED_PERMANENTLY,
     description="Redirect a shortened URL to a mapped URL",
     summary="Redirect a shortened URL to a mapped URL",
     responses={

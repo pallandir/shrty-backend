@@ -1,5 +1,3 @@
-"""Define base engine for sql database"""
-
 from sqlalchemy.orm import DeclarativeBase
 
 

@@ -84,7 +84,9 @@ async def redirect_mapped_url(
             mapped_url.visited += 1
             mapped_url.last_visit = datetime.now().date()
             await repository.update_model(mapped_url.id, mapped_url)
-            return RedirectResponse(mapped_url.mapped_url)
     except DBInsertError as insert_error:
         LOGGER.exception(insert_error)
         raise HTTPException(status.HTTP_400_BAD_REQUEST, insert_error.message)
+    return RedirectResponse(
+        mapped_url.mapped_url, status_code=status.HTTP_301_MOVED_PERMANENTLY
+    )

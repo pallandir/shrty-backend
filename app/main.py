@@ -10,7 +10,6 @@ from fastapi.responses import ORJSONResponse
 
 from settings import (
     LOGGING_LEVEL,
-    API_PREFIX,
     SERVER_HOST,
     SERVER_PORT,
     SERVER_WORKERS,
@@ -27,9 +26,7 @@ from app import routers_list
 app = FastAPI(
     title=TITLE,
     docs_url=DOCS_URL,
-    swagger_ui_parameters={
-        "defaultModelsExpandDepth": -1
-    },  # Hides Schemas Menu in Docs
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1},
     default_response_class=ORJSONResponse,
 )
 
@@ -57,7 +54,6 @@ for route in routers_list:
 # Health Check
 @app.get("/_health", status_code=200, include_in_schema=False)
 async def health_check() -> ORJSONResponse:
-    """This is the health check endpoint"""
     return ORJSONResponse([{"status": "ok"}])
 
 

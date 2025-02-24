@@ -6,13 +6,10 @@ TIMEZONE: str = "UTC"
 DESCRIPTION: str | None = None
 DEBUG: bool = True
 
-SERVER_HOST: str = config("HOST", default="0.0.0.0", cast=str)  # type: ignore
-SERVER_PORT: int = config("PORT", default=8090, cast=int)  # type: ignore
+SERVER_HOST: str = config("HOST", default="0.0.0.0", cast=str)
+SERVER_PORT: int = config("PORT", default=8090, cast=int) 
 ENVIRONMENT: str = config("ENVIRONMENT", default="dev")
-APPLICATION_URL: str = (
-    f"{'https' if ENVIRONMENT == 'prd' else 'http'}://{SERVER_HOST}:{SERVER_PORT}"
-)
-SERVER_WORKERS: int = config("SERVER_WORKERS", default=1, cast=int)  # type: ignore
+SERVER_WORKERS: int = config("SERVER_WORKERS", default=1, cast=int) 
 API_PREFIX: str = "/api/v1"
 DOCS_URL: str = f"{API_PREFIX}/docs"
 OPENAPI_URL: str = f"{API_PREFIX}/openapi.json"
@@ -22,17 +19,17 @@ API_RESPONSE_CHUNK = 5000
 
 DATABASE_URL: str = config("DB_URL", default="")
 ALLOWED_ORIGINS: list[str] = [
-    "http://localhost:3000",  # React default port
+    "http://localhost:3000",
     "http://0.0.0.0:3000",
-    "http://127.0.0.1:3000",  # React docker port
+    "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
-    "http://localhost:5173",  # Qwik default port
+    "http://localhost:5173",
     "http://0.0.0.0:5173",
-    "http://127.0.0.1:5173",  # Qwik docker port
+    "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
 ]
 ALLOWED_METHODS: list[str] = ["*"]
 ALLOWED_HEADERS: list[str] = ["*"]
 
-LOGGING_LEVEL: str = config("LOG_LEVEL", default="INFO", cast=str)  # type: ignore
+LOGGING_LEVEL: str = config("LOG_LEVEL", default="INFO", cast=str)
 LOGGERS: tuple[str, str] = ("uvicorn.asgi", "uvicorn.access")

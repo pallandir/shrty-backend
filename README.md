@@ -46,14 +46,14 @@ Knowing that there are around 1.2 billion website today in the world and 200,000
 first you need to setup your virtual environment and install dependancies
 
 ```sh
+
+# Create your virtual environment
 python3 venv -m ./venv 
 
 # Activate it
-
 source venv/bin/activate
 
-# Install dependancies
-
+# Install dependancies\
 pip install -r requirements/dev.txt
 ```
 

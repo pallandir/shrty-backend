@@ -53,7 +53,7 @@ python3 venv -m ./venv
 # Activate it
 source venv/bin/activate
 
-# Install dependancies\
+# Install dependancies
 pip install -r requirements/dev.txt
 ```
 

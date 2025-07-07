@@ -38,3 +38,68 @@ Now, consider using just a subset of available emojis — say **1,500** out of t
 Knowing that there are around 1.2 billion website today in the world and 200,000 new ones created everyday, this approach not only supports more mappings than traditional shorteners but also results in **shorter** and more **visually distinctive** URLs.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+first you need to setup your virtual environment and install dependancies
+
+```sh
+python3 venv -m ./venv 
+
+# Activate it
+
+source venv/bin/activate
+
+# Install dependancies
+
+pip install -r requirements/dev.txt
+```
+
+Setup your environment variables as defined in .env.example, then start the project:
+
+```sh
+python -m app.main
+```
+
+> [!IMPORTANT]  
+> You'll need to setup a proper postgresql instance on your local machine in order to allow connectivity with the app. 
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Roadmap
+
+- [x] [Initial Milestone or Goal]
+- [x] [Another Completed Task]
+- [ ] [Planned Task or Feature]
+- [ ] [Additional Goal]
+
+Feel free to suggest more ideas or contribute!
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## License
+
+This repository and all its content is under `GNU General Public License v3.0`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Acknowledgments
+
+Thanks to these great resources:
+
+- [Resource Name 1](https://example.com)
+- [Resource Name 2](https://example.com)
+- [Optional: Study Plan or Cheat Sheet](https://example.com)
+
+> Add any relevant credits or learning materials here.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>

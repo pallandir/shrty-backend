@@ -60,7 +60,7 @@ pip install -r requirements/dev.txt
 Setup your environment variables as defined in .env.example, then start the project:
 
 ```sh
-python -m app.main
+python -m app.main # Allow to run the app as a module
 ```
 
 > [!IMPORTANT]  

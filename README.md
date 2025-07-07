@@ -69,37 +69,8 @@ python -m app.main # Allow to run the app as a module
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
----
-
-## Roadmap
-
-- [x] [Initial Milestone or Goal]
-- [x] [Another Completed Task]
-- [ ] [Planned Task or Feature]
-- [ ] [Additional Goal]
-
-Feel free to suggest more ideas or contribute!
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
----
-
 ## License
 
 This repository and all its content is under `GNU General Public License v3.0`.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
----
-
-## Acknowledgments
-
-Thanks to these great resources:
-
-- [Resource Name 1](https://example.com)
-- [Resource Name 2](https://example.com)
-- [Optional: Study Plan or Cheat Sheet](https://example.com)
-
-> Add any relevant credits or learning materials here.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
